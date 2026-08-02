@@ -14,7 +14,7 @@ OpenCV(C++) 기반 산업 표면 결함 검출 저장소입니다. 정상 이미
 
 | 프로젝트 | 내용 |
 |---|---|
-| [**AnomalyDetection-cpu-baseline**](AnomalyDetection-cpu-baseline) (v1) | 정상 평균(골든 이미지) 차분 기반 CPU 파이프라인 + 파라미터 실험 |
+| [**AnomalyDetection-fixed-threshold**](AnomalyDetection-fixed-threshold) (v1) | 정상 평균(골든 이미지) 차분 + 고정 임계값 파이프라인 + 파라미터 실험 |
 | [**AnomalyDetection-adaptive**](AnomalyDetection-adaptive) (v2) | 픽셀별 표준편차(σ) 기반 적응형 임계값(Z-score) |
 | [**AnomalyDetection-registration**](AnomalyDetection-registration) (v3) | 차분 전 ECC 정렬 추가 — 정렬 오차의 영향 검증 |
 

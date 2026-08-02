@@ -1,4 +1,4 @@
-# 표면 결함 검출 — CPU 베이스라인
+# 표면 결함 검출 — 고정 임계값 (v1)
 
 ## 개요
 
@@ -40,7 +40,7 @@ MVTec AD capsule · 정상 219장 학습 → test 132장(정상 23 / 결함 109)
 
 Visual Studio 2022, vcpkg OpenCV(x64), **Release · x64**.
 ```
-AnomalyDetection-cpu-baseline.exe <capsule_root> [threshold] [min_area] [blur_ksize] [morph_ksize]
+AnomalyDetection-fixed-threshold.exe <capsule_root> [threshold] [min_area] [blur_ksize] [morph_ksize]
   기본값: threshold=30  min_area=50  blur_ksize=5  morph_ksize=5
 ```
 

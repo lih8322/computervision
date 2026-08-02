@@ -2,7 +2,7 @@
 
 ## 개요
 
-[v1 (CPU baseline)](../AnomalyDetection-cpu-baseline) 의 후속입니다. v1은 모든 픽셀에 같은 고정 임계값을 썼는데, 실험에서 어떤 고정 파라미터로도 과검·미검이 함께 낮아지지 않고 과검이 34.8 %에서 멈췄습니다.
+[v1 (CPU baseline)](../AnomalyDetection-fixed-threshold) 의 후속입니다. v1은 모든 픽셀에 같은 고정 임계값을 썼는데, 실험에서 어떤 고정 파라미터로도 과검·미검이 함께 낮아지지 않고 과검이 34.8 %에서 멈췄습니다.
 
 픽셀 위치마다 정상일 때의 변동 폭이 다른 점(매끈한 영역은 σ 작음, 무늬·인쇄 영역은 σ 큼)이 원인으로 보여, v2에서는 픽셀별 정상 표준편차 σ를 학습해 절대 밝기차 대신 "정상 변동 대비 몇 σ 벗어났는가"로 판정하도록 바꿔 보았습니다.
 
@@ -48,4 +48,4 @@ AnomalyDetection-adaptive.exe <capsule_root> [k] [sigma_min] [min_area] [blur_ks
 
 ## 데이터셋
 
-[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad) — CC BY-NC-SA 4.0. **저장소에 미포함** ([v1 README](../AnomalyDetection-cpu-baseline/README.md#데이터셋) 참고).
+[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad) — CC BY-NC-SA 4.0. **저장소에 미포함** ([v1 README](../AnomalyDetection-fixed-threshold/README.md#데이터셋) 참고).

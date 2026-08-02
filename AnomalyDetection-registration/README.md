@@ -57,4 +57,4 @@ AnomalyDetection-registration.exe <capsule_root> [k] [sigma_min] [min_area] [blu
 
 ## 데이터셋
 
-[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad) — CC BY-NC-SA 4.0. **저장소에 미포함** ([v1 README](../AnomalyDetection-cpu-baseline/README.md#데이터셋) 참고).
+[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad) — CC BY-NC-SA 4.0. **저장소에 미포함** ([v1 README](../AnomalyDetection-fixed-threshold/README.md#데이터셋) 참고).

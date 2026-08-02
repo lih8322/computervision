@@ -23,7 +23,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{33063858-fdca-4337-bc24-e15b47ddb9dc}</ProjectGuid>
-    <RootNamespace>AnomalyDetectioncpubaseline</RootNamespace>
+    <RootNamespace>AnomalyDetectionfixedthreshold</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
