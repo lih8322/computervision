@@ -1,13 +1,14 @@
 # Computer Vision — 표면 결함 검출 (Anomaly Detection)
 
-OpenCV(C++) 기반 산업 표면 결함 검출 저장소입니다. 정상 이미지 기반 이상탐지 파이프라인을 구현하고, 파라미터 실험으로 한계를 규명한 뒤 적응형 임계값으로 개선했습니다. 모든 결과는 **MVTec AD** 로 실측했습니다.
+OpenCV(C++) 기반 산업 표면 결함 검출 저장소입니다. 정상 이미지 기반 이상탐지 파이프라인을 구현하고, 파라미터 실험으로 한계를 규명한 뒤 적응형 임계값·정렬로 단계적으로 개선해 보았습니다. 모든 결과는 **MVTec AD** 로 실측했습니다.
 
 ## 프로젝트 구성
 
 | 프로젝트 | 내용 |
 |---|---|
-| [**AnomalyDetection-cpu-baseline**](AnomalyDetection-cpu-baseline) | 정상 평균(골든 이미지) 차분 기반 CPU 파이프라인 + 파라미터 실험 |
-| [**AnomalyDetection-adaptive**](AnomalyDetection-adaptive) | 픽셀별 표준편차(σ) 기반 적응형 임계값 — baseline의 한계 극복 |
+| [**AnomalyDetection-cpu-baseline**](AnomalyDetection-cpu-baseline) (v1) | 정상 평균(골든 이미지) 차분 기반 CPU 파이프라인 + 파라미터 실험 |
+| [**AnomalyDetection-adaptive**](AnomalyDetection-adaptive) (v2) | 픽셀별 표준편차(σ) 기반 적응형 임계값(Z-score) |
+| [**AnomalyDetection-registration**](AnomalyDetection-registration) (v3) | 차분 전 ECC 정렬 추가 — 정렬 오차의 영향 검증 |
 
 파이프라인: `정상 평균 → 차분(absdiff) → 블러 → 이진화 → 모폴로지 → 연결요소`
 지표: **과검**(정상을 결함이라 함) / **미검**(결함을 놓침), 폴더별 집계. 원본 수치는 각 프로젝트 `experiments/` CSV.
@@ -15,14 +16,15 @@ OpenCV(C++) 기반 산업 표면 결함 검출 저장소입니다. 정상 이미
 ## 결과 요약
 
 MVTec AD capsule · 정상 219장 학습 → test 132장(정상 23 / 결함 109) · Intel i5-6600, MSVC Release x64.
+같은 미검 수준끼리 비교한 과검(정상 오검):
 
-| | 과검 | 미검 | 처리시간 |
-|---|---:|---:|---:|
-| v1 고정 임계값 (균형점) | 34.8 % | 37.6 % | ~7.5 ms |
-| v2 적응형 (동일 미검 기준) | −22 %p | 6.4 % | ~23 ms |
+| | 과검 | 처리시간 | 비고 |
+|---|---:|---:|---|
+| v1 고정 임계값 | 기준 | ~7.5 ms | threshold·min_area·blur 스윕 — 어느 것도 과검·미검 동시 개선 못 함 |
+| v2 적응형(Z-score) | 최대 −22 %p | ~23 ms | 픽셀별 σ 반영, 무늬 영역 과검 일부 해소 |
+| v3 정렬(ECC) | 엄격 구간 −8.7 %p | ~52 ms | 정렬 오차는 일부 원인일 뿐, 과검 34.8 % 벽 남음 |
 
-- 고정 파라미터(threshold·min_area·blur)로는 과검·미검이 함께 낮아지지 않았고, 픽셀별 적응형 임계값에서는 같은 미검 수준에서 과검이 최대 ~22 %p 낮게 나왔습니다.
-- 남은 과검(34.8 %)은 무늬보다 정렬·조명 쪽이 원인으로 보이며, 다음에 정합(registration)을 시도해 볼 지점입니다.
+세 단계를 거치며 소프트웨어 처리만으로는 과검이 34.8 %에서 더 내려가지 않았습니다. 남은 부분은 알고리즘보다 **조명·촬영 조건** 쪽에 원인이 있는 것으로 보이며, 이 지점에서 광학 통제(정렬·조명·렌즈)가 필요하다는 것을 실험으로 확인했습니다.
 
 ## 기술 스택
 
