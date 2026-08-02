@@ -26,7 +26,7 @@ detect: 입력 → ① absdiff(기준과 차분) → ② 블러(노이즈 완화
 MVTec AD capsule · 정상 219장 학습 → test 132장(정상 23 / 결함 109) · Intel i5-6600, Release x64.
 처리시간 **~7.5 ms/frame (~130 FPS)**. 지표: 과검(정상 오검) / 미검(결함 놓침).
 
-**파라미터 실험** ([`experiments/`](experiments) CSV) — 한 번에 하나씩 변경:
+**파라미터 실험** — 한 번에 하나씩 변경. 전체 수치는 [`experiments/RESULTS.md`](experiments/RESULTS.md) (원본 CSV 포함):
 
 | 실험 | 관찰 |
 |---|---|
