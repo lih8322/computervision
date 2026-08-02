@@ -1,0 +1,23 @@
+# 빌드 산출물
+[Bb]in/
+[Oo]bj/
+x64/
+Debug/
+Release/
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.idb
+
+# Visual Studio
+.vs/
+*.user
+
+# 데이터셋 (MVTec AD — 라이선스상 미포함, 링크만)
+**/mvtec*/
+**/capsule/
+**/data/
+
+# 결과물
+*.csv
