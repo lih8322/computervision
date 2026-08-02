@@ -24,3 +24,6 @@ Release/
 
 # 단, 실험 결과 CSV는 추적 (포트폴리오 근거)
 !AnomalyDetection-cpu-baseline/experiments/*.csv
+
+# 단, README용 예시 이미지는 추적
+!docs/*.png

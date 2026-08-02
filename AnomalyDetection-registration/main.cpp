@@ -159,6 +159,46 @@ public:
         return defects;
     }
 
+    // ─────────────────────────────────────────────────────────────────────
+    //  visualize: 차분 히트맵과 검출 오버레이를 파일로 저장 (README용).
+    //   - <prefix>_heatmap.png : Z-score를 컬러맵으로 (결함 부위가 붉게)
+    //   - <prefix>_overlay.png : 원본 위에 검출 박스
+    //  검출 로직은 detect()와 동일하되, 결과 이미지만 추가로 만든다.
+    // ─────────────────────────────────────────────────────────────────────
+    void visualize(const cv::Mat& input, const std::string& prefix) {
+        if (mean_.empty() || input.empty()) return;
+
+        cv::Mat gray;
+        to_gray(input, gray);
+        if (gray.size() != ref_size_) cv::resize(gray, gray, ref_size_);
+        cv::Mat x;
+        gray.convertTo(x, CV_32FC1);
+        if (params.use_ecc) x = align_ecc(x);
+
+        cv::Mat diff;
+        cv::absdiff(x, mean_, diff);
+        cv::Mat denom;
+        cv::max(sigma_, params.sigma_min, denom);
+        cv::Mat score;
+        cv::divide(diff, denom, score);
+
+        // 히트맵: score를 [0, k*2] 범위로 정규화 → 8U → 컬러맵
+        cv::Mat score8;
+        score.convertTo(score8, CV_8UC1, 255.0 / (params.k * 2.0));
+        cv::Mat heat;
+        cv::applyColorMap(score8, heat, cv::COLORMAP_JET);
+        cv::imwrite(prefix + "_heatmap.png", heat);
+
+        // 오버레이: 원본(그레이→BGR) 위에 검출 박스
+        cv::Mat gray8;
+        if (gray.type() != CV_8UC1) gray.convertTo(gray8, CV_8UC1); else gray8 = gray;
+        cv::Mat overlay;
+        cv::cvtColor(gray8, overlay, cv::COLOR_GRAY2BGR);
+        for (const auto& r : detect(input))
+            cv::rectangle(overlay, r, cv::Scalar(0, 0, 255), 2);
+        cv::imwrite(prefix + "_overlay.png", overlay);
+    }
+
     bool trained() const { return !mean_.empty(); }
 
 private:
@@ -234,9 +274,25 @@ int main(int argc, char** argv) {
     // OpenCV의 INFO 로그(TBB 플러그인 등) 숨기기
     cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_SILENT);
 
+    // ── 시각화 모드: exe viz <capsule_root> <image> <out_prefix> [k] ──
+    //    기준 학습 후 지정 이미지의 히트맵·오버레이를 저장하고 종료 (README 그림용)
+    if (argc >= 5 && std::string(argv[1]) == "viz") {
+        DefectDetector vdet;
+        vdet.params.k = (argc > 5) ? std::atof(argv[5]) : vdet.params.k;
+        auto normals = load_images(fs::path(argv[2]) / "train" / "good");
+        if (normals.empty()) { std::cerr << "정상 이미지 없음\n"; return 1; }
+        vdet.train(normals);
+        cv::Mat img = cv::imread(argv[3], cv::IMREAD_COLOR);
+        if (img.empty()) { std::cerr << "이미지 로드 실패: " << argv[3] << "\n"; return 1; }
+        vdet.visualize(img, argv[4]);
+        std::cout << "시각화 저장: " << argv[4] << "_heatmap.png, " << argv[4] << "_overlay.png\n";
+        return 0;
+    }
+
     if (argc < 2) {
         std::cerr << "Usage: " << argv[0]
                   << " <capsule_root> [k] [sigma_min] [min_area] [blur_ksize] [morph_ksize] [use_ecc]\n"
+                  << "  viz <capsule_root> <image> <out_prefix> [k]  (히트맵·오버레이 저장)\n"
                   << "  기본값: k=3.0  sigma_min=3.0  min_area=50  blur_ksize=5  morph_ksize=5  use_ecc=1\n"
                   << "  (use_ecc=0 이면 정렬 끄기 → v2와 동일 조건 비교)\n"
                   << "  예: " << argv[0] << " ...\\capsule 3.5\n";

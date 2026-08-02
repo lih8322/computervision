@@ -2,6 +2,14 @@
 
 OpenCV(C++) 기반 산업 표면 결함 검출 저장소입니다. 정상 이미지 기반 이상탐지 파이프라인을 구현하고, 파라미터 실험으로 한계를 규명한 뒤 적응형 임계값·정렬로 단계적으로 개선해 보았습니다. 모든 결과는 **MVTec AD** 로 실측했습니다.
 
+## 예시
+
+| 정상 | 결함(찍힘) | Z-score 히트맵 | 검출 결과 |
+|:---:|:---:|:---:|:---:|
+| ![정상](docs/good_original.png) | ![결함](docs/defect_original.png) | ![히트맵](docs/defect_heatmap.png) | ![검출](docs/defect_overlay.png) |
+
+정상 평균에서 벗어난 정도(Z-score)를 색으로 나타낸 것이 히트맵입니다 — 결함 부위가 붉게 뜨고 정상 배경은 파랗습니다. 이를 임계·정리한 뒤 결함 영역을 박스로 표시합니다. (v3, MVTec AD capsule/poke)
+
 ## 프로젝트 구성
 
 | 프로젝트 | 내용 |
@@ -34,5 +42,5 @@ MVTec AD capsule · 정상 219장 학습 → test 132장(정상 23 / 결함 109)
 
 ## 데이터셋
 
-[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad) — CC BY-NC-SA 4.0. **저장소에 포함하지 않습니다.**
+[MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad) — CC BY-NC-SA 4.0. 전체 데이터는 **저장소에 포함하지 않습니다.** 위 예시의 원본 이미지(정상·결함)는 MVTec AD capsule에서 발췌했으며, 저작권은 MVTec Software GmbH에 있습니다(비상업 연구 목적 인용).
 > P. Bergmann et al., "MVTec AD — A Comprehensive Real-World Dataset for Unsupervised Anomaly Detection," CVPR 2019.
